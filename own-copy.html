@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your own drill generator</title>
+<style>
+:root{--paper:#f3f5f4;--card:#fff;--ink:#14232b;--muted:#5a6b72;--line:#d5dcdb;--turf:#1f6fb5;--navy:#002d5a;--ball:#ffd21f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "Segoe UI",Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:16px}
+header{border-bottom:3px solid var(--navy);padding-bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.club{font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);font-size:.9rem}
+h1{margin:0;font-size:1.7rem;line-height:1.15}
+.langs{display:flex;gap:4px}
+button,.btn{font:600 1rem inherit;font-family:inherit;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block}
+.langs button[aria-pressed="true"],.btn.main{background:var(--turf);border-color:var(--turf);color:#fff}
+section{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px}
+ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:12px}
+pre{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--ball);border-radius:4px;padding:10px;margin:8px 0;font:14px/1.45 ui-monospace,Menlo,Consolas,monospace}
+.note{color:var(--muted);font-size:.9rem;margin:0}
+a{color:var(--turf)}
+:focus-visible{outline:3px solid var(--ball);outline-offset:1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div style="display:flex;align-items:center;gap:12px"><svg width="52" height="52" style="flex:none" viewBox="0 0 84 84" role="img" aria-label="MW"><rect width="84" height="84" rx="16" fill="#002d5a"/><path d="M16 56V26l11 16 11-16v30" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 26l5.5 30L57 38l5.5 18L68 26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="69" r="3.5" fill="#ffd21f"/></svg><div><h1 id="h"></h1></div></div>
+  <div class="langs" role="group" aria-label="Language">
+    <button type="button" data-l="nl" aria-pressed="false">NL</button>
+    <button type="button" data-l="fr" aria-pressed="false">FR</button>
+    <button type="button" data-l="en" aria-pressed="true">EN</button>
+  </div>
+</header>
+<section>
+  <p id="intro" style="margin-top:0"></p>
+  <ol>
+    <li><span id="s1"></span><br><a class="btn main" id="dl" href="generator.html" download="hockey-drill-generator.html" style="margin-top:6px"></a></li>
+    <li id="s2"></li>
+    <li><span id="s3"></span>
+      <pre id="sentence">Create an artifact from the attached HTML file, exactly as it is, without changing or shortening the code. It calls window.claude.complete to generate drills.</pre>
+      <button type="button" id="copy"></button></li>
+    <li id="s4"></li>
+    <li id="s5"></li>
+  </ol>
+</section>
+<section>
+  <p class="note" id="n1"></p>
+  <p class="note" id="n2" style="margin-top:8px"></p>
+  <p style="margin:12px 0 0"><a href="./" id="back"></a></p>
+  <p class="note" id="rights" style="margin-top:12px"></p>
+</section>
+</div>
+<script>
+(function(){
+var T={
+en:{h:"Your own one-click drill generator",intro:"With your own copy inside Claude, you fill in the form, press one button, and the drill appears on the page with its pitch drawing. It uses your own Claude account. Setting it up takes about two minutes, and you do it once.",
+ s1:"Download the generator file.",dl:"Download the file",s2:"Open claude.ai, sign in with your own account and start a new chat.",s3:"Attach the file you downloaded and paste this sentence as your message:",copy:"Copy the sentence",copied:"Copied",
+ s4:"Claude shows the generator as a page. Fill in the form and press \"Write drill\" to test it.",s5:"Save it so you can find it again: bookmark the page on your computer, or on your phone choose Share and then \"Add to Home Screen\".",
+ n1:"If the button on your copy says \"Open in Claude\" instead of \"Write drill\", your copy cannot reach Claude directly. It still works: follow the three steps shown on the page (send the request, copy the answer, paste it back).",
+ n2:"Drills are written by AI. Read each one before training and adapt it to your players and your club's safety rules.",rights:"© 2026 Maroussia Walckiers. All rights reserved. Free to use during the test period.",back:"Back to the drill library"},
+nl:{h:"Je eigen oefeningengenerator in één klik",intro:"Met je eigen kopie in Claude vul je het formulier in, druk je op één knop en verschijnt de oefening op de pagina met de veldtekening. Je gebruikt je eigen Claude-account. Het opzetten duurt ongeveer twee minuten en je doet het één keer.",
+ s1:"Download het generatorbestand.",dl:"Download het bestand",s2:"Open claude.ai, meld je aan met je eigen account en start een nieuw gesprek.",s3:"Voeg het gedownloade bestand toe en plak deze zin als bericht:",copy:"Kopieer de zin",copied:"Gekopieerd",
+ s4:"Claude toont de generator als een pagina. Vul het formulier in en druk op \"Schrijf oefening\" om te testen.",s5:"Bewaar de pagina zodat je ze terugvindt: maak een bladwijzer op je computer, of kies op je telefoon Delen en dan \"Zet op beginscherm\".",
+ n1:"Staat er op de knop van je kopie \"Open in Claude\" in plaats van \"Schrijf oefening\", dan kan je kopie Claude niet rechtstreeks bereiken. Het werkt nog steeds: volg de drie stappen op de pagina (aanvraag versturen, antwoord kopiëren, terug plakken).",
+ n2:"De oefeningen zijn door AI geschreven. Lees elke oefening voor de training en pas ze aan je spelers en de veiligheidsregels van je club aan.",rights:"© 2026 Maroussia Walckiers. Alle rechten voorbehouden. Gratis te gebruiken tijdens de testperiode.",back:"Terug naar de oefeningenbibliotheek"},
+fr:{h:"Ton propre générateur d'exercices en un clic",intro:"Avec ta propre copie dans Claude, tu remplis le formulaire, tu appuies sur un bouton et l'exercice apparaît sur la page avec le schéma du terrain. Tu utilises ton propre compte Claude. L'installation prend environ deux minutes et ne se fait qu'une fois.",
+ s1:"Télécharge le fichier du générateur.",dl:"Télécharger le fichier",s2:"Ouvre claude.ai, connecte-toi avec ton propre compte et démarre une nouvelle conversation.",s3:"Joins le fichier téléchargé et colle cette phrase comme message :",copy:"Copier la phrase",copied:"Copié",
+ s4:"Claude affiche le générateur sous forme de page. Remplis le formulaire et appuie sur « Écrire l'exercice » pour tester.",s5:"Enregistre la page pour la retrouver : ajoute un favori sur ton ordinateur, ou sur ton téléphone choisis Partager puis « Sur l'écran d'accueil ».",
+ n1:"Si le bouton de ta copie indique « Ouvrir dans Claude » au lieu de « Écrire l'exercice », ta copie ne peut pas joindre Claude directement. Cela fonctionne quand même : suis les trois étapes indiquées sur la page (envoyer la demande, copier la réponse, la coller).",
+ n2:"Les exercices sont rédigés par une IA. Lis chaque exercice avant l'entraînement et adapte-le à tes joueurs et aux règles de sécurité de ton club.",rights:"© 2026 Maroussia Walckiers. Tous droits réservés. Utilisation gratuite pendant la période de test.",back:"Retour à la bibliothèque d'exercices"}};
+var lang="en";try{var sl=localStorage.getItem("lang");if(sl&&T[sl])lang=sl}catch(e){}
+function $(i){return document.getElementById(i)}
+function apply(){var t=T[lang];document.documentElement.lang=lang;["h","intro","s1","dl","s2","s3","copy","s4","s5","n1","n2","back","rights"].forEach(function(k){$(k).textContent=t[k]});
+  document.querySelectorAll(".langs button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.l===lang))})}
+document.querySelectorAll(".langs button").forEach(function(b){b.addEventListener("click",function(){lang=b.dataset.l;try{localStorage.setItem("lang",lang)}catch(e){}apply()})});
+$("copy").addEventListener("click",function(){var b=$("copy");try{navigator.clipboard.writeText($("sentence").textContent).then(function(){b.textContent=T[lang].copied;setTimeout(function(){b.textContent=T[lang].copy},1500)},function(){})}catch(e){}});
+apply();
+})();
+</script>
+</body>
+</html>
